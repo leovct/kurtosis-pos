@@ -1,0 +1,5 @@
+participants:
+  - el_type: bor
+    cl_type: heimdall
+  - el_type: erigon
+    cl_type: heimdall

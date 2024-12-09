@@ -36,7 +36,7 @@ def sanity_check(plan, input_args):
     validate_list(input_args, "additional_services")
 
     # Validate values.
-    for p in input_args.get("participants"):
+    for p in input_args.get("participants", []):
         validate_participant(p)
 
     plan.print("Sanity check passed")
@@ -104,4 +104,4 @@ def validate_str(input, attribute, allowed_values):
 def validate_count(input):
     count = input.get("count")
     if count == 0:
-        fail('Count must be strictly positive. Got: {}.'.format(count))
+        fail("Count must be strictly positive. Got: {}.".format(count))
