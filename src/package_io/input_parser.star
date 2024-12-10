@@ -1,6 +1,7 @@
 constants = import_module("./constants.star")
 sanity_check = import_module("./sanity_check.star")
 
+DEFAULT_CONTRACTS_DEPLOYER = "leovct/matic-contracts:node-16"
 
 DEFAULT_EL_IMAGES = {
     constants.EL_TYPE.bor: "maticnetwork/bor:v0.2.17",
@@ -29,6 +30,9 @@ DEFAULT_POLYGON_POS_PACKAGE_ARGS = {
             "count": 1,
         }
     ],
+    "contract_deployer": {
+        "image": DEFAULT_CONTRACTS_DEPLOYER,
+    },
     "network_params": {
         "network": "kurtosis",
         "network_id": "123456",
@@ -74,6 +78,11 @@ def _parse_polygon_pos_args(plan, polygon_pos_input_args):
     participants = polygon_pos_input_args.get("participants", [])
     result["participants"] = _parse_participants(participants)
 
+    contract_deployer_params = polygon_pos_input_args.get("contract_deployer", {})
+    result["contract_deployer"] = _parse_contract_deployer_params(
+        contract_deployer_params
+    )
+
     network_params = polygon_pos_input_args.get("network_params", {})
     result["network_params"] = _parse_network_params(network_params)
 
@@ -113,6 +122,18 @@ def _parse_participants(participants):
 
     # Sort each participant dictionary and return the result
     return [_sort_dict_by_values(p) for p in participants]
+
+
+def _parse_contract_deployer_params(contract_deployer_params):
+    # Set default contract deployer params if not provided.
+    if not contract_deployer_params:
+        contract_deployer_params = DEFAULT_POLYGON_POS_PACKAGE_ARGS["contract_deployer"]
+
+    for k, v in DEFAULT_POLYGON_POS_PACKAGE_ARGS["contract_deployer"].items():
+        contract_deployer_params.setdefault(k, v)
+
+    # Sort the dict and return the result.
+    return _sort_dict_by_values(contract_deployer_params)
 
 
 def _parse_network_params(network_params):
