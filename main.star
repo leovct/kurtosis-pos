@@ -1,8 +1,9 @@
-input_parser = import_module("./src/package_io/input_parser.star")
-
 ethereum_package = import_module(
     "github.com/ethpandaops/ethereum-package/main.star@4.4.0"
 )
+
+input_parser = import_module("./src/package_io/input_parser.star")
+wait = import_module("./src/wait/wait.star")
 
 
 def run(plan, args):
@@ -12,6 +13,13 @@ def run(plan, args):
 
     plan.print("Deploying a local L1")
     l1 = ethereum_package.run(plan, ethereum_args)
+    plan.print(l1.network_params)
+    l1_config_env_vars = get_l1_config(
+        l1.all_participants, l1.network_params, l1.network_id
+    )
+
+    plan.print("Waiting for L1 to start up")
+    wait.wait_for_startup(plan, l1_config_env_vars)
 
     number_participants = len(polygon_pos_args["participants"])
     plan.print(
@@ -19,3 +27,15 @@ def run(plan, args):
             number_participants, polygon_pos_args["participants"]
         )
     )
+
+
+def get_l1_config(all_l1_participants, l1_network_params, l1_network_id):
+    env_vars = {}
+    env_vars["L1_RPC_KIND"] = "standard"
+    env_vars["WEB3_RPC_URL"] = str(all_l1_participants[0].el_context.rpc_http_url)
+    env_vars["L1_RPC_URL"] = str(all_l1_participants[0].el_context.rpc_http_url)
+    env_vars["CL_RPC_URL"] = str(all_l1_participants[0].cl_context.beacon_http_url)
+    env_vars["L1_WS_URL"] = str(all_l1_participants[0].el_context.ws_url)
+    env_vars["L1_CHAIN_ID"] = str(l1_network_id)
+    env_vars["L1_BLOCK_TIME"] = str(l1_network_params.seconds_per_slot)
+    return env_vars
