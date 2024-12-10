@@ -31,18 +31,18 @@ def sanity_check(plan, input_args):
             )
 
     # Validate keys.
-    validate_list_of_dict(input_args, "participants")
-    validate_dict(input_args, "network_params")
-    validate_list(input_args, "additional_services")
+    _validate_list_of_dict(input_args, "participants")
+    _validate_dict(input_args, "network_params")
+    _validate_list(input_args, "additional_services")
 
     # Validate values.
     for p in input_args.get("participants", []):
-        validate_participant(p)
+        _validate_participant(p)
 
     plan.print("Sanity check passed")
 
 
-def validate_list(input_args, category):
+def _validate_list(input_args, category):
     allowed_values = ALLOWED_PARAMS[category]
     if category in input_args:
         for item in input_args[category]:
@@ -56,7 +56,7 @@ def validate_list(input_args, category):
                 )
 
 
-def validate_dict(input_args, category):
+def _validate_dict(input_args, category):
     allowed_params = ALLOWED_PARAMS[category]
     if category in input_args:
         for param in input_args[category].keys():
@@ -68,7 +68,7 @@ def validate_dict(input_args, category):
                 )
 
 
-def validate_list_of_dict(input_args, category):
+def _validate_list_of_dict(input_args, category):
     allowed_keys = ALLOWED_PARAMS[category]
     if category in input_args:
         for item in input_args[category]:
@@ -81,17 +81,17 @@ def validate_list_of_dict(input_args, category):
                     )
 
 
-def validate_participant(p):
-    validate_str(p, "el_type", [constants.EL_TYPE.bor, constants.EL_TYPE.erigon])
-    validate_str(p, "cl_type", [constants.CL_TYPE.heimdall])
+def _validate_participant(p):
+    _validate_str(p, "el_type", [constants.EL_TYPE.bor, constants.EL_TYPE.erigon])
+    _validate_str(p, "cl_type", [constants.CL_TYPE.heimdall])
 
     log_values = [constants.LOG_LEVEL.info, constants.LOG_LEVEL.debug]
-    validate_str(p, "el_log_level", log_values)
-    validate_str(p, "cl_log_level", log_values)
-    validate_count(p)
+    _validate_str(p, "el_log_level", log_values)
+    _validate_str(p, "cl_log_level", log_values)
+    _validate_strictly_positive_int(p, "count")
 
 
-def validate_str(input, attribute, allowed_values):
+def _validate_str(input, attribute, allowed_values):
     value = input.get(attribute)
     if value and value not in allowed_values:
         fail(
@@ -101,7 +101,9 @@ def validate_str(input, attribute, allowed_values):
         )
 
 
-def validate_count(input):
-    count = input.get("count")
-    if count == 0:
-        fail("Count must be strictly positive. Got: {}.".format(count))
+def _validate_strictly_positive_int(input, attribute):
+    value = input.get(attribute)
+    if value == 0:
+        fail(
+            'Invalid "{}": must be strictly positive, got: {}.'.format(attribute, value)
+        )

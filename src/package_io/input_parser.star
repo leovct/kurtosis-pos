@@ -36,22 +36,27 @@ def input_parser(plan, input_args):
 
     # Parse the input args and set defaults if needed.
     result = {}
-    result["participants"] = parse_participants(input_args)
-    result["network_params"] = parse_network_params(input_args)
-    if "additional_services" not in result:
-        result["additional_services"] = DEFAULT_ARGS["additional_services"]
+
+    participants = input_args.get("participants", [])
+    result["participants"] = _parse_participants(participants)
+
+    network_params = input_args.get("network_params", {})
+    result["network_params"] = _parse_network_params(network_params)
+
+    additional_services = input_args.get("additional_services", [])
+    result["additional_services"] = _parse_additional_services(additional_services)
 
     # Sort the dict and return the result.
-    return sort_dict_by_values(result)
+    return _sort_dict_by_values(result)
 
 
-def parse_participants(input_args):
+def _parse_participants(participants):
     # Set default participant if not provided.
-    if "participants" not in input_args:
-        input_args["participants"] = DEFAULT_ARGS["participants"]
+    if len(participants) == 0:
+        participants = DEFAULT_ARGS["participants"]
 
     default_participant = DEFAULT_ARGS["participants"][0]
-    for p in input_args["participants"]:
+    for p in participants:
         # Set default EL image based on `el_type` if provided.
         el_type = p.get("el_type", "")
         el_image = p.get("el_image", "")
@@ -73,21 +78,28 @@ def parse_participants(input_args):
             p.setdefault(k, v)
 
     # Sort each participant dictionary and return the result
-    return [sort_dict_by_values(p) for p in input_args["participants"]]
+    return [_sort_dict_by_values(p) for p in participants]
 
 
-def parse_network_params(input_args):
+def _parse_network_params(network_params):
     # Set default network params if not provided.
-    if "network_params" not in input_args:
-        input_args["network_params"] = DEFAULT_ARGS["network_params"]
+    if not network_params:
+        network_params = DEFAULT_ARGS["network_params"]
 
     for k, v in DEFAULT_ARGS["network_params"].items():
-        input_args["network_params"].setdefault(k, v)
+        network_params.setdefault(k, v)
 
     # Sort the dict and return the result.
-    return sort_dict_by_values(input_args["network_params"])
+    return _sort_dict_by_values(network_params)
 
 
-def sort_dict_by_values(d):
+def _parse_additional_services(additional_services):
+    # Set default additional services if not provided.
+    if len(additional_services) == 0:
+        additional_services = DEFAULT_ARGS["additional_services"]
+    return additional_services
+
+
+def _sort_dict_by_values(d):
     sorted_items = sorted(d.items(), key=lambda x: x[0])
     return {k: v for k, v in sorted_items}
