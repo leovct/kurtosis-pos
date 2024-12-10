@@ -11,7 +11,13 @@ DEFAULT_CL_IMAGES = {
     constants.CL_TYPE.heimdall: "maticnetwork/heimdall:v1.0.3",
 }
 
-DEFAULT_ARGS = {
+DEFAULT_ETHEREUM_PACKAGE_ARGS = {
+    "network_params": {
+        "preset": "minimal",
+    }
+}
+
+DEFAULT_POLYGON_POS_PACKAGE_ARGS = {
     "participants": [
         {
             "el_type": constants.EL_TYPE.bor,
@@ -32,18 +38,46 @@ DEFAULT_ARGS = {
 
 
 def input_parser(plan, input_args):
-    sanity_check.sanity_check(plan, input_args)
+    plan.print("Parsing the L1 input args")
+    ethereum_input_args = input_args.get("ethereum_package", {})
+    ethereum_args = _parse_ethereum_args(plan, ethereum_input_args)
+    plan.print("L1 input args parsed: {}".format(str(ethereum_args)))
 
-    # Parse the input args and set defaults if needed.
+    plan.print("Parsing the L2 input args")
+    polygon_pos_input_args = input_args.get("polygon_pos_package", {})
+    polygon_pos_args = _parse_polygon_pos_args(plan, polygon_pos_input_args)
+    plan.print("L2 input args parsed: {}".format(str(polygon_pos_args)))
+    return {
+        "ethereum_package": ethereum_args,
+        "polygon_pos_package": polygon_pos_args,
+    }
+
+
+def _parse_ethereum_args(plan, ethereum_input_args):
+    # Set default params if not provided.
+    if "network_params" not in ethereum_input_args:
+        ethereum_input_args = DEFAULT_ETHEREUM_PACKAGE_ARGS
+
+    for k, v in DEFAULT_ETHEREUM_PACKAGE_ARGS["network_params"].items():
+        ethereum_input_args["network_params"].setdefault(k, v)
+
+    # Sort the dict and return the result.
+    return _sort_dict_by_values(ethereum_input_args)
+
+
+def _parse_polygon_pos_args(plan, polygon_pos_input_args):
+    sanity_check.sanity_check(plan, polygon_pos_input_args)
+
+    # Parse the polygon pos input args and set defaults if needed.
     result = {}
 
-    participants = input_args.get("participants", [])
+    participants = polygon_pos_input_args.get("participants", [])
     result["participants"] = _parse_participants(participants)
 
-    network_params = input_args.get("network_params", {})
+    network_params = polygon_pos_input_args.get("network_params", {})
     result["network_params"] = _parse_network_params(network_params)
 
-    additional_services = input_args.get("additional_services", [])
+    additional_services = polygon_pos_input_args.get("additional_services", [])
     result["additional_services"] = _parse_additional_services(additional_services)
 
     # Sort the dict and return the result.
@@ -53,9 +87,9 @@ def input_parser(plan, input_args):
 def _parse_participants(participants):
     # Set default participant if not provided.
     if len(participants) == 0:
-        participants = DEFAULT_ARGS["participants"]
+        participants = DEFAULT_POLYGON_POS_PACKAGE_ARGS["participants"]
 
-    default_participant = DEFAULT_ARGS["participants"][0]
+    default_participant = DEFAULT_POLYGON_POS_PACKAGE_ARGS["participants"][0]
     for p in participants:
         # Set default EL image based on `el_type` if provided.
         el_type = p.get("el_type", "")
@@ -84,9 +118,9 @@ def _parse_participants(participants):
 def _parse_network_params(network_params):
     # Set default network params if not provided.
     if not network_params:
-        network_params = DEFAULT_ARGS["network_params"]
+        network_params = DEFAULT_POLYGON_POS_PACKAGE_ARGS["network_params"]
 
-    for k, v in DEFAULT_ARGS["network_params"].items():
+    for k, v in DEFAULT_POLYGON_POS_PACKAGE_ARGS["network_params"].items():
         network_params.setdefault(k, v)
 
     # Sort the dict and return the result.
@@ -96,7 +130,7 @@ def _parse_network_params(network_params):
 def _parse_additional_services(additional_services):
     # Set default additional services if not provided.
     if len(additional_services) == 0:
-        additional_services = DEFAULT_ARGS["additional_services"]
+        additional_services = DEFAULT_POLYGON_POS_PACKAGE_ARGS["additional_services"]
     return additional_services
 
 
