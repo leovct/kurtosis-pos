@@ -17,8 +17,9 @@ polygon_pos_package:
       is_validator: false
       count: 2
 
-  contract_deployer:
-    image: leovct/matic-contracts:node-16
+  matic_contracts_params:
+    contracts_deployer_image: leovct/matic-contracts-deployer:node-16
+    genesis_builder_image: leovct/matic-genesis-builder:node-16
 
   network_params:
     network: kurtosis

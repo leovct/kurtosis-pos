@@ -11,8 +11,9 @@ ALLOWED_PARAMS = {
         "is_validator",
         "count",
     ],
-    "contract_deployer": [
-        "image",
+    "matic_contracts_params": [
+        "contracts_deployer_image",
+        "genesis_builder_image",
     ],
     "network_params": [
         "network",
@@ -40,7 +41,7 @@ def sanity_check(plan, input_args):
 
     # Validate keys.
     _validate_list_of_dict(input_args, "participants")
-    _validate_dict(input_args, "contract_deployer")
+    _validate_dict(input_args, "matic_contracts_params")
     _validate_dict(input_args, "network_params")
     _validate_list(input_args, "additional_services")
 
