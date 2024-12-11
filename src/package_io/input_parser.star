@@ -1,7 +1,8 @@
 constants = import_module("./constants.star")
 sanity_check = import_module("./sanity_check.star")
 
-DEFAULT_CONTRACTS_DEPLOYER = "leovct/matic-contracts:node-16"
+DEFAULT_CONTRACTS_DEPLOYER = "leovct/matic-contracts-deployer:node-16"
+DEFAULT_GENESIS_BUILDER = "leovct/matic-genesis-builder:node-16"
 
 DEFAULT_EL_IMAGES = {
     constants.EL_TYPE.bor: "maticnetwork/bor:v0.2.17",
@@ -44,8 +45,9 @@ DEFAULT_POLYGON_POS_PACKAGE_ARGS = {
             "count": 1,
         }
     ],
-    "contract_deployer": {
-        "image": DEFAULT_CONTRACTS_DEPLOYER,
+    "matic_contracts_params": {
+        "contracts_deployer_image": DEFAULT_CONTRACTS_DEPLOYER,
+        "genesis_builder_image": DEFAULT_GENESIS_BUILDER,
     },
     "network_params": {
         "network": "kurtosis",
