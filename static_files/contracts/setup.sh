@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -euxo pipefail
 
 # Deploy MATIC contracts to the root chain and stake for each validator.
