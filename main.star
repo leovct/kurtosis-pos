@@ -20,8 +20,8 @@ def run(plan, args):
     # TODO: Remove this limitation.
     participants = polygon_pos_args["participants"]
     number_validators = count_validators(participants)
-    prefunded_accounts = genesis_constants.PRE_FUNDED_ACCOUNTS
-    max_number_validators = len(prefunded_accounts)
+    validator_prefunded_accounts = genesis_constants.PRE_FUNDED_ACCOUNTS
+    max_number_validators = len(validator_prefunded_accounts)
     if number_validators > max_number_validators:
         fail(
             "Having more than {} validators is not supported for now.".format(
@@ -41,19 +41,18 @@ def run(plan, args):
     if preregistered_validator_keys_mnemonic != default_l2_mnemonic:
         fail("Using a different mnemonic is not supported for now.")
 
-    # Configure the prefunded accounts to be used by the L2 validators.
-    validator_prefunded_accounts = (
-        genesis_constants.to_ethereum_pkg_pre_funded_accounts(prefunded_accounts)
-    )
     # Merge the user-specified prefunded accounts and the validator prefunded accounts.
+    prefunded_accounts = genesis_constants.to_ethereum_pkg_pre_funded_accounts(
+        validator_prefunded_accounts
+    )
     l1_network_params = ethereum_args.get("network_params", {})
-    l1_prefunded_accounts_str = l1_network_params.get("prefunded_accounts", "")
-    if l1_prefunded_accounts_str != "":
-        l1_prefunded_accounts = json.decode(l1_prefunded_accounts_str)
-        for account in l1_prefunded_accounts:
-            value = l1_prefunded_accounts[account]
-            validator_prefunded_accounts[account] = value
-    ethereum_args["network_params"]["prefunded_accounts"] = validator_prefunded_accounts
+    user_prefunded_accounts_str = l1_network_params.get("prefunded_accounts", "")
+    if user_prefunded_accounts_str != "":
+        user_prefunded_accounts = json.decode(user_prefunded_accounts_str)
+        prefunded_accounts = prefunded_accounts | user_prefunded_accounts
+    ethereum_args["network_params"] = l1_network_params | {
+        "prefunded_accounts": prefunded_accounts
+    }
 
     plan.print(
         "Deploying a local L1 with the following input args: {}".format(ethereum_args)
