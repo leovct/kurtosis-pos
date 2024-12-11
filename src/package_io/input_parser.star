@@ -13,9 +13,22 @@ DEFAULT_CL_IMAGES = {
 }
 
 DEFAULT_ETHEREUM_PACKAGE_ARGS = {
+    "participants": [
+        {
+            "el_type": "geth",
+            "el_image": "ethereum/client-go:v1.14.12",
+            "cl_type": "lighthouse",
+            "cl_image": "sigp/lighthouse:v6.0.0",
+            "use_separate_vc": True,
+            "vc_type": "lighthouse",
+            "vc_image": "sigp/lighthouse:v6.0.0",
+            "count": 1,
+        },
+    ],
     "network_params": {
         "preset": "minimal",
-    }
+        "seconds_per_slot": 1,
+    },
 }
 
 DEFAULT_POLYGON_POS_PACKAGE_ARGS = {
@@ -27,6 +40,7 @@ DEFAULT_POLYGON_POS_PACKAGE_ARGS = {
             "cl_type": constants.CL_TYPE.heimdall,
             "cl_image": DEFAULT_CL_IMAGES[constants.CL_TYPE.heimdall],
             "cl_log_level": "info",
+            "is_validator": True,
             "count": 1,
         }
     ],
@@ -36,6 +50,11 @@ DEFAULT_POLYGON_POS_PACKAGE_ARGS = {
     "network_params": {
         "network": "kurtosis",
         "network_id": "123456",
+        "heimdall_id": "heimdall-P5rXwg",
+        # This mnemonic will be used to create keystores for heimdall validators.
+        "preregistered_validator_keys_mnemonic": "sibling lend brave explain wait orbit mom alcohol disorder message grace sun",
+        "validator_stake_amount": "10000",  # in ether
+        "validator_top_up_fee_amount": "2000",  # in ether
     },
     "additional_services": [],
 }

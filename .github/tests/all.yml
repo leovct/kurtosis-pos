@@ -1,0 +1,32 @@
+ethereum_package:
+  network_params:
+    preset: minimal
+    prefunded_accounts: '{"0x25941dC771bB64514Fc8abBce970307Fb9d477e9": {"balance": "10ETH"}}'
+
+polygon_pos_package:
+  participants:
+    - el_type: bor
+      el_image: maticnetwork/bor:v0.2.17
+      el_log_level: info
+      cl_type: heimdall
+      cl_image: maticnetwork/heimdall:v1.0.3
+      cl_log_level: debug
+      is_validator: true
+      count: 1
+    - el_type: erigon
+      is_validator: false
+      count: 2
+
+  contract_deployer:
+    image: leovct/matic-contracts:node-16
+
+  network_params:
+    network: kurtosis
+    network_id: "123456"
+    heimdall_id: heimdall-P5rXwg
+    preregistered_validator_keys_mnemonic: sibling lend brave explain wait orbit mom alcohol disorder message grace sun
+    validator_stake_amount: "10000"
+    validator_top_up_fee_amount: "2000"
+
+  additional_services:
+    - tx_spammer

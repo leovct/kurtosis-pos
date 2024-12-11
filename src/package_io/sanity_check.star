@@ -8,11 +8,19 @@ ALLOWED_PARAMS = {
         "cl_type",
         "cl_image",
         "cl_log_level",
+        "is_validator",
         "count",
+    ],
+    "contract_deployer": [
+        "image",
     ],
     "network_params": [
         "network",
         "network_id",
+        "heimdall_id",
+        "preregistered_validator_keys_mnemonic",
+        "validator_stake_amount",
+        "validator_top_up_fee_amount",
     ],
     "additional_services": [
         "tx_spammer",
@@ -32,6 +40,7 @@ def sanity_check(plan, input_args):
 
     # Validate keys.
     _validate_list_of_dict(input_args, "participants")
+    _validate_dict(input_args, "contract_deployer")
     _validate_dict(input_args, "network_params")
     _validate_list(input_args, "additional_services")
 
