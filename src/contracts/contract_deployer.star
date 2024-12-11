@@ -19,8 +19,8 @@ def deploy_contracts(plan, l1, polygon_pos_args):
     validator_stake_amount = network_params["validator_stake_amount"]
     validator_top_up_fee_amount = network_params["validator_top_up_fee_amount"]
 
-    contract_deployer_params = polygon_pos_args["contract_deployer"]
-    contract_deployer_image = contract_deployer_params["image"]
+    matic_contracts_params = polygon_pos_args["matic_contracts_params"]
+    contracts_deployer_image = matic_contracts_params["contracts_deployer_image"]
 
     contracts_config_artifact = plan.upload_files(
         src=CONTRACTS_CONFIG_FILE_PATH,
@@ -30,7 +30,7 @@ def deploy_contracts(plan, l1, polygon_pos_args):
     contracts_deployer = plan.run_sh(
         name="matic-contracts-deployer",
         description="Deploying MATIC contracts to L1 and staking for each validator - it can take up to 2 minutes",
-        image=contract_deployer_image,
+        image=contracts_deployer_image,
         env_vars={
             "PRIVATE_KEY": l1_private_key,
             "L1_RPC_URL": l1_rpc_url,

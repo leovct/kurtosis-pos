@@ -99,9 +99,9 @@ def _parse_polygon_pos_args(plan, polygon_pos_input_args):
     participants = polygon_pos_input_args.get("participants", [])
     result["participants"] = _parse_participants(participants)
 
-    contract_deployer_params = polygon_pos_input_args.get("contract_deployer", {})
-    result["contract_deployer"] = _parse_contract_deployer_params(
-        contract_deployer_params
+    matic_contracts_params = polygon_pos_input_args.get("matic_contracts_params", {})
+    result["matic_contracts_params"] = _parse_matic_contracts_params(
+        matic_contracts_params
     )
 
     network_params = polygon_pos_input_args.get("network_params", {})
@@ -145,16 +145,16 @@ def _parse_participants(participants):
     return [_sort_dict_by_values(p) for p in participants]
 
 
-def _parse_contract_deployer_params(contract_deployer_params):
-    # Set default contract deployer params if not provided.
-    if not contract_deployer_params:
-        contract_deployer_params = DEFAULT_POLYGON_POS_PACKAGE_ARGS["contract_deployer"]
+def _parse__parse_matic_contracts_params(matic_contracts_params):
+    # Set default matic contracts params if not provided.
+    if not matic_contracts_params:
+        matic_contracts_params = DEFAULT_POLYGON_POS_PACKAGE_ARGS["matic_contracts_params"]
 
-    for k, v in DEFAULT_POLYGON_POS_PACKAGE_ARGS["contract_deployer"].items():
-        contract_deployer_params.setdefault(k, v)
+    for k, v in DEFAULT_POLYGON_POS_PACKAGE_ARGS["matic_contracts_params"].items():
+        matic_contracts_params.setdefault(k, v)
 
     # Sort the dict and return the result.
-    return _sort_dict_by_values(contract_deployer_params)
+    return _sort_dict_by_values(matic_contracts_params)
 
 
 def _parse_network_params(network_params):
