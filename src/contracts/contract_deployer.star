@@ -42,6 +42,12 @@ def deploy_contracts(plan, l1, polygon_pos_args):
         files={
             "/opt/data": contracts_config_artifact,
         },
+        store=[
+            StoreSpec(
+                src="/opt/contracts/contractAddresses.json",
+                name="matic-contract-addresses",
+            ),
+        ],
         run="bash /opt/data/setup.sh",
     )
 
