@@ -27,26 +27,6 @@ def deploy_contracts(plan, l1, polygon_pos_args):
         name="matic-contracts-deployer-config",
     )
 
-    # plan.add_service(
-    #     name="matic-contracts-deployer-test",
-    #     config=ServiceConfig(
-    #         image=contract_deployer_image,
-    #         env_vars={
-    #             "PRIVATE_KEY": l1_private_key,
-    #             "L1_RPC_URL": l1_rpc_url,
-    #             "HEIMDALL_ID": heimdall_id,
-    #             "VALIDATOR_ACCOUNTS": validator_accounts,
-    #             "VALIDATOR_STAKE_AMOUNT": validator_stake_amount,
-    #             "VALIDATOR_TOP_UP_FEE_AMOUNT": validator_top_up_fee_amount,
-    #         },
-    #         files={
-    #             "/opt/data": contracts_config_artifact,
-    #         },
-    #         entrypoint=["bash", "-c"],
-    #         cmd=["sleep infinity"],
-    #     ),
-    # )
-
     contracts_deployer = plan.run_sh(
         name="matic-contracts-deployer",
         description="Deploying MATIC contracts to L1 and staking for each validator - it can take up to 2 minutes",
