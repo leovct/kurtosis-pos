@@ -148,7 +148,9 @@ def _parse_participants(participants):
 def _parse_matic_contracts_params(matic_contracts_params):
     # Set default matic contracts params if not provided.
     if not matic_contracts_params:
-        matic_contracts_params = DEFAULT_POLYGON_POS_PACKAGE_ARGS["matic_contracts_params"]
+        matic_contracts_params = DEFAULT_POLYGON_POS_PACKAGE_ARGS[
+            "matic_contracts_params"
+        ]
 
     for k, v in DEFAULT_POLYGON_POS_PACKAGE_ARGS["matic_contracts_params"].items():
         matic_contracts_params.setdefault(k, v)
