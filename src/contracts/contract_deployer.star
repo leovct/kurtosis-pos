@@ -48,7 +48,7 @@ def deploy_contracts(plan, l1, polygon_pos_args):
                 name="matic-contract-addresses",
             ),
         ],
-        run="bash /opt/data/setup.sh",
+        run="chmod +x {0} && {0}".format("/opt/data/setup.sh"),
     )
 
 
