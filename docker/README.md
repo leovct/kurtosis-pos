@@ -14,6 +14,6 @@ docker push leovct/matic-contracts-deployer:node-16
 - [Docker Hub](https://hub.docker.com/r/leovct/matic-genesis-builder)
 
 ```bash
-docker build --tag leovct/matic-genesis-builder:node-16 --file genesis-builder.Dockerfile .
+docker build --tag leovct/matic-genesis-builder:node-16 --file matic-genesis-builder.Dockerfile .
 docker push leovct/matic-genesis-builder:node-16
 ```
