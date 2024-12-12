@@ -1,9 +1,25 @@
+FROM debian:bullseye-slim as soldity-builder
+LABEL description="Solidity builder"
+LABEL author="devtools@polygon.technology"
+
+WORKDIR /opt/solidity
+RUN apt-get update \
+  && apt-get install --yes cmake libboost-all-dev z3 cvc4 git gcc g++ \
+  && git clone --branch v0.5.17 https://github.com/ethereum/solidity.git . \
+  && mkdir build \
+  && cd build \
+  && cmake .. \
+  && make
+
+
 FROM node:16-bookworm
 LABEL description="MATIC (Polygon PoS) genesis builder image"
 LABEL author="devtools@polygon.technology"
 
 ENV DEFAULT_BOR_ID="137"
 ENV DEFAULT_HEIMDALL_ID="heimdall-P5rXwg"
+
+COPY --from=soldity-builder /solidity/build/solc /usr/local/bin
 
 # Prepare environment to build MATIC genesis file.
 WORKDIR /opt/genesis-contracts
