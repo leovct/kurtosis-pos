@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim as soldity-builder
+FROM debian:bullseye-slim AS soldity-builder
 LABEL description="Solidity builder"
 LABEL author="devtools@polygon.technology"
 
