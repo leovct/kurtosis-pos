@@ -23,8 +23,8 @@ polygon_pos_package:
 
   network_params:
     network: kurtosis
-    bor_id: "137"
-    heimdall_id: heimdall-P5rXwg
+    bor_id: "139"
+    heimdall_id: heimdall-P6rXwg
     preregistered_validator_keys_mnemonic: sibling lend brave explain wait orbit mom alcohol disorder message grace sun
     validator_stake_amount: "10000"
     validator_top_up_fee_amount: "2000"
