@@ -28,9 +28,10 @@ def generate_el_genesis_data(plan, polygon_pos_args, validator_config_artifact):
             "DEFAULT_HEIMDALL_ID": constants.DEFAULT_HEIMDALL_ID,
         },
         files={
-            "/opt/data": Directory(
-                artifact_names=[genesis_config_artifact, validator_config_artifact],
-            ),
+            # TODO: Load the artefacts one by one instead of using a Directory because it is not
+            # supported by Kurtosis when using plan.run_sh unfortunately.
+            "/opt/data/genesis": genesis_config_artifact,
+            "/opt/data/validator": validator_config_artifact,
         },
         store=[
             StoreSpec(
@@ -38,5 +39,5 @@ def generate_el_genesis_data(plan, polygon_pos_args, validator_config_artifact):
                 name="l2-genesis",
             ),
         ],
-        run="bash /opt/data/genesis-builder.sh",
+        run="bash /opt/data/genesis/genesis-builder.sh",
     )

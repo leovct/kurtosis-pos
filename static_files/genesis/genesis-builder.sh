@@ -40,5 +40,5 @@ fi
 
 # Generate the genesis file.
 echo "Generating the genesis file..."
-cp /opt/data/validators.js validators.js
+cp /opt/data/validator/validators.js validators.js
 node generate-genesis.js --bor-chain-id "${BOR_ID}" --heimdall-chain-id "${HEIMDALL_ID}"
