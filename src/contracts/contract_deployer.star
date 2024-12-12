@@ -6,14 +6,11 @@ genesis_constants = import_module(
 CONTRACTS_CONFIG_FILE_PATH = "../../static_files/contracts"
 
 
-def deploy_contracts(plan, l1, polygon_pos_args):
+def deploy_contracts(plan, l1, polygon_pos_args, validator_accounts):
     l1_private_key = l1.pre_funded_accounts[
         12
     ].private_key  # reserved for L2 contract deployers
     l1_rpc_url = l1.all_participants[0].el_context.rpc_http_url
-
-    participants = polygon_pos_args["participants"]
-    validator_accounts = get_validator_accounts(participants)
 
     network_params = polygon_pos_args["network_params"]
     bor_id = network_params["bor_id"]
@@ -24,12 +21,14 @@ def deploy_contracts(plan, l1, polygon_pos_args):
     matic_contracts_params = polygon_pos_args["matic_contracts_params"]
     contracts_deployer_image = matic_contracts_params["contracts_deployer_image"]
 
+    validator_accounts_formatted = _format_validator_accounts(validator_accounts)
+
     contracts_config_artifact = plan.upload_files(
         src=CONTRACTS_CONFIG_FILE_PATH,
         name="matic-contracts-deployer-config",
     )
 
-    contracts_deployer = plan.run_sh(
+    return plan.run_sh(
         name="matic-contracts-deployer",
         description="Deploying MATIC contracts to L1 and staking for each validator - it can take up to 2 minutes",
         image=contracts_deployer_image,
@@ -39,7 +38,8 @@ def deploy_contracts(plan, l1, polygon_pos_args):
             "BOR_ID": bor_id,
             "DEFAULT_BOR_ID": constants.DEFAULT_BOR_ID,
             "HEIMDALL_ID": heimdall_id,
-            "VALIDATOR_ACCOUNTS": validator_accounts,
+            "VALIDATOR_ACCOUNTS": validator_accounts_formatted,
+            "VALIDATOR_BALANCE": constants.VALIDATORS_BALANCE_ETH,
             "VALIDATOR_STAKE_AMOUNT": validator_stake_amount,
             "VALIDATOR_TOP_UP_FEE_AMOUNT": validator_top_up_fee_amount,
         },
@@ -51,18 +51,19 @@ def deploy_contracts(plan, l1, polygon_pos_args):
                 src="/opt/contracts/contractAddresses.json",
                 name="matic-contract-addresses",
             ),
+            StoreSpec(
+                src="/opt/contracts/validators.js",
+                name="validators-config",
+            ),
         ],
         run="bash /opt/data/setup.sh",
     )
 
 
-def get_validator_accounts(participants):
-    prefunded_accounts = genesis_constants.PRE_FUNDED_ACCOUNTS
-    validators = []
-    index = 0
-    for participant in participants:
-        if participant["is_validator"]:
-            account = prefunded_accounts[index]
-            validators.append("{} {}".format(account.address, account.full_public_key))
-            index += 1
-    return "\n".join(validators)
+def _format_validator_accounts(accounts):
+    return ";".join(
+        [
+            "{},{}".format(account.address, account.full_public_key)
+            for account in accounts
+        ]
+    )

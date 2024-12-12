@@ -1,3 +1,6 @@
+constants = import_module("../../package_io/constants.star")
+
+
 def new_prefunded_account(address, full_public_key, private_key):
     return struct(
         address=address, full_public_key=full_public_key, private_key=private_key
@@ -5,8 +8,10 @@ def new_prefunded_account(address, full_public_key, private_key):
 
 
 def to_ethereum_pkg_pre_funded_accounts(pre_funded_accounts):
+    balance = constants.VALIDATORS_BALANCE_ETH
     return {
-        account.address: {"balance": "1000000000ETH"} for account in pre_funded_accounts
+        account.address: {"balance": "{}ETH".format(balance)}
+        for account in pre_funded_accounts
     }
 
 

@@ -16,19 +16,6 @@ def run(plan, args):
     ethereum_args = args.get("ethereum_package")
     polygon_pos_args = args.get("polygon_pos_package")
 
-    # Sanity check the number of validators.
-    # TODO: Remove this limitation.
-    participants = polygon_pos_args["participants"]
-    number_validators = count_validators(participants)
-    validator_prefunded_accounts = genesis_constants.PRE_FUNDED_ACCOUNTS
-    max_number_validators = len(validator_prefunded_accounts)
-    if number_validators > max_number_validators:
-        fail(
-            "Having more than {} validators is not supported for now.".format(
-                max_number_validators
-            )
-        )
-
     # Sanity check the mnemonic used.
     # TODO: Remove this limitation.
     l2_network_params = polygon_pos_args["network_params"]
@@ -43,7 +30,7 @@ def run(plan, args):
 
     # Merge the user-specified prefunded accounts and the validator prefunded accounts.
     prefunded_accounts = genesis_constants.to_ethereum_pkg_pre_funded_accounts(
-        validator_prefunded_accounts
+        genesis_constants.PRE_FUNDED_ACCOUNTS
     )
     l1_network_params = ethereum_args.get("network_params", {})
     user_prefunded_accounts_str = l1_network_params.get("prefunded_accounts", "")
@@ -64,14 +51,22 @@ def run(plan, args):
     )
 
     wait.wait_for_startup(plan, l1_config_env_vars)
-    contract_deployer.deploy_contracts(plan, l1, polygon_pos_args)
 
-    number_participants = len(participants)
+    participants = polygon_pos_args["participants"]
     plan.print(
         "Launching a Polygon PoS devnet with {} participants and the following network params: {}".format(
-            number_participants, participants
+            len(participants), participants
         )
     )
+
+    validator_accounts = get_validator_accounts(participants)
+    plan.print("Number of validators: " + str(len(validator_accounts)))
+    plan.print(validator_accounts)
+
+    result = contract_deployer.deploy_contracts(
+        plan, l1, polygon_pos_args, validator_accounts
+    )
+    validator_config_artifact = result.files_artifacts[1]
 
 
 def get_l1_config(all_l1_participants, l1_network_params, l1_network_id):
@@ -80,5 +75,24 @@ def get_l1_config(all_l1_participants, l1_network_params, l1_network_id):
     return env_vars
 
 
-def count_validators(participants):
-    return len([p for p in participants if p.get("is_validator", False)])
+def get_validator_accounts(participants):
+    prefunded_accounts = genesis_constants.PRE_FUNDED_ACCOUNTS
+    max_number_validators = len(prefunded_accounts)
+
+    validator_accounts = []
+    index = 0
+    for participant in participants:
+        if participant["is_validator"]:
+            count = participant.get("count", 1)
+            for _ in range(count):
+                account = prefunded_accounts[index]
+                validator_accounts.append(account)
+                index += 1
+                if index >= max_number_validators:
+                    # TODO: Remove this limitation.
+                    fail(
+                        "Having more than {} validators is not supported for now.".format(
+                            max_number_validators
+                        )
+                    )
+    return validator_accounts
