@@ -15,7 +15,6 @@ polygon_pos_package:
 
   network_params:
     # network: kurtosis
-    network_id: 5555
 
   additional_services: [
     "tx_spammer",

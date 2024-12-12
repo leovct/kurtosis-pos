@@ -15,3 +15,6 @@ LOG_LEVEL = struct(
 ADDITIONAL_SERVICES = struct(
     tx_spammer="tx_spammer",
 )
+
+DEFAULT_BOR_ID = "137"
+DEFAULT_HEIMDALL_ID = "heimdall-P5rXwg"

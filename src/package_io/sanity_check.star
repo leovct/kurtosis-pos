@@ -17,7 +17,7 @@ ALLOWED_PARAMS = {
     ],
     "network_params": [
         "network",
-        "network_id",
+        "bor_id",
         "heimdall_id",
         "preregistered_validator_keys_mnemonic",
         "validator_stake_amount",

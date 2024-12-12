@@ -1,3 +1,4 @@
+constants = import_module("../package_io/constants.star")
 genesis_constants = import_module(
     "../prelaunch_data_generator/genesis_constants/genesis_constants.star"
 )
@@ -15,6 +16,7 @@ def deploy_contracts(plan, l1, polygon_pos_args):
     validator_accounts = get_validator_accounts(participants)
 
     network_params = polygon_pos_args["network_params"]
+    bor_id = network_params["bor_id"]
     heimdall_id = network_params["heimdall_id"]
     validator_stake_amount = network_params["validator_stake_amount"]
     validator_top_up_fee_amount = network_params["validator_top_up_fee_amount"]
@@ -34,6 +36,8 @@ def deploy_contracts(plan, l1, polygon_pos_args):
         env_vars={
             "PRIVATE_KEY": l1_private_key,
             "L1_RPC_URL": l1_rpc_url,
+            "BOR_ID": bor_id,
+            "DEFAULT_BOR_ID": constants.DEFAULT_BOR_ID,
             "HEIMDALL_ID": heimdall_id,
             "VALIDATOR_ACCOUNTS": validator_accounts,
             "VALIDATOR_STAKE_AMOUNT": validator_stake_amount,

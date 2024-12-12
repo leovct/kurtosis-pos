@@ -51,7 +51,7 @@ DEFAULT_POLYGON_POS_PACKAGE_ARGS = {
     },
     "network_params": {
         "network": "kurtosis",
-        "network_id": "123456",
+        "bor_id": "137",
         "heimdall_id": "heimdall-P5rXwg",
         # This mnemonic will be used to create keystores for heimdall validators.
         "preregistered_validator_keys_mnemonic": "sibling lend brave explain wait orbit mom alcohol disorder message grace sun",
