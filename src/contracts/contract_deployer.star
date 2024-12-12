@@ -30,7 +30,7 @@ def deploy_contracts(plan, l1, polygon_pos_args, validator_accounts):
 
     return plan.run_sh(
         name="matic-contracts-deployer",
-        description="Deploying MATIC contracts to L1 and staking for each validator - it can take up to 2 minutes",
+        description="Deploying MATIC contracts to L1 and staking for each validator - it can take up to 5 minutes",
         image=contracts_deployer_image,
         env_vars={
             "PRIVATE_KEY": l1_private_key,
@@ -57,6 +57,7 @@ def deploy_contracts(plan, l1, polygon_pos_args, validator_accounts):
             ),
         ],
         run="bash /opt/data/setup.sh",
+        wait="300s",  # 5min (default 180s - 3min)
     )
 
 
