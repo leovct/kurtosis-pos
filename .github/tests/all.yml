@@ -12,10 +12,10 @@ polygon_pos_package:
       cl_image: maticnetwork/heimdall:v1.0.3
       cl_log_level: debug
       is_validator: true
-      count: 1
+      count: 2
     - el_type: erigon
       is_validator: false
-      count: 2
+      count: 1
 
   matic_contracts_params:
     contracts_deployer_image: leovct/matic-contracts-deployer:node-16
