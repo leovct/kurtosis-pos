@@ -13,12 +13,11 @@ RUN npm install --global truffle@5.11.5 \
   && git submodule init \
   && git submodule update \
   && npm install \
-  && npm run truffle compile \
-  && pushd matic-contracts \
+  && cd matic-contracts \
   && git checkout mardizzone/node-16 \
   && npm install \
   && npm run template:process -- --bor-chain-id $DEFAULT_BOR_ID \
-  && popd \
   && truffle compile \
+  && cd .. \
   && node generate-borvalidatorset.js --bor-chain-id $DEFAULT_BOR_ID --heimdall-chain-id $DEFAULT_HEIMDALL_ID \
   && truffle compile
