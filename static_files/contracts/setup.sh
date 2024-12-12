@@ -50,7 +50,10 @@ echo "HEIMDALL_ID: ${HEIMDALL_ID}"
 
 echo "Running the 4 first steps of the truffle migration..."
 truffle migrate --network development --f 1 --to 4 --compile-none
+
+echo "MATIC contracts deployed to the root chain:"
 cat /opt/contracts/contractAddresses.json
+echo
 
 # Stake for each validator.
 if [[ -z "${VALIDATOR_ACCOUNTS}" ]]; then
