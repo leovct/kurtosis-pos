@@ -3,6 +3,9 @@ ethereum_package = import_module(
 )
 
 contract_deployer = import_module("./src/contracts/contract_deployer.star")
+el_genesis_generator = import_module(
+    "./src/prelaunch_data_generator/el_genesis/el_genesis_generator.star"
+)
 genesis_constants = import_module(
     "./src/prelaunch_data_generator/genesis_constants/genesis_constants.star"
 )
@@ -67,6 +70,9 @@ def run(plan, args):
         plan, l1, polygon_pos_args, validator_accounts
     )
     validator_config_artifact = result.files_artifacts[1]
+    el_genesis_generator.generate_el_genesis_data(
+        plan, polygon_pos_args, validator_config_artifact
+    )
 
 
 def get_l1_config(all_l1_participants, l1_network_params, l1_network_id):
