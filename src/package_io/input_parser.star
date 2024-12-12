@@ -50,6 +50,7 @@ DEFAULT_POLYGON_POS_PACKAGE_ARGS = {
         "genesis_builder_image": DEFAULT_GENESIS_BUILDER,
     },
     "network_params": {
+        # TODO: Find out if this `network` parameter is really needed.
         "network": "kurtosis",
         "bor_id": "137",
         "heimdall_id": "heimdall-P5rXwg",
