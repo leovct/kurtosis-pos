@@ -1,5 +1,5 @@
 FROM node:16-bookworm
-LABEL description="MATIC (Polgon PoS) contracts deployment image"
+LABEL description="MATIC (Polygon PoS) contracts deployment image"
 LABEL author="devtools@polygon.technology"
 
 # Prepare MATIC smart contracts for deployment by compiling them.

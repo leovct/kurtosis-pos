@@ -1,5 +1,5 @@
 FROM node:16-bookworm
-LABEL description="MATIC (Polgon PoS) genesis builder image"
+LABEL description="MATIC (Polygon PoS) genesis builder image"
 LABEL author="devtools@polygon.technology"
 
 # Prepare environment to build MATIC genesis file.
