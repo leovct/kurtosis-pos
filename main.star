@@ -70,9 +70,11 @@ def run(plan, args):
         plan, l1, polygon_pos_args, validator_accounts
     )
     validator_config_artifact = result.files_artifacts[1]
-    el_genesis_generator.generate_el_genesis_data(
+
+    result = el_genesis_generator.generate_el_genesis_data(
         plan, polygon_pos_args, validator_config_artifact
     )
+    l2_el_genesis_artifact = result.files_artifacts[0]
 
 
 def get_l1_config(all_l1_participants, l1_network_params, l1_network_id):
