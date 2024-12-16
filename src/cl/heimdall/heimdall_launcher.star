@@ -23,7 +23,7 @@ def launch(plan, name, participant, private_key):
         ),
     )
     rabbitmq_amqp_port = rabbitmq_service.ports[AMQP_PORT_ID]
-    rabbitmq_url = "http://{}:{}".format(
+    rabbitmq_url = "amqp://{}:{}".format(
         rabbitmq_service.ip_address, rabbitmq_amqp_port.number
     )
 
