@@ -47,26 +47,40 @@ def run(plan, args):
             rpc_url=dev_args["l1_rpc_url"],
         )
 
-    participants = polygon_pos_args["participants"]
+    # Deploy MATIC contracts if needed.
+    should_deploy_matic_contracts = dev_args["should_deploy_matic_contracts"]
+    if should_deploy_matic_contracts == True:
+        participants = polygon_pos_args["participants"]
+        validator_accounts = get_validator_accounts(participants)
+        plan.print("Number of validators: " + str(len(validator_accounts)))
+        plan.print(validator_accounts)
+
+        plan.print("Deploying MATIC contracts to L1 and staking for each validator")
+        result = contract_deployer.deploy_contracts(
+            plan, l1_context, polygon_pos_args, validator_accounts
+        )
+        validator_config_artifact = result.files_artifacts[1]
+
+        result = el_genesis_generator.generate_el_genesis_data(
+            plan, polygon_pos_args, validator_config_artifact
+        )
+        l2_el_genesis_artifact = result.files_artifacts[0]
+    else:
+        plan.print("Using L2 genesis provided")
+        l2_el_genesis_file_content = read_file(src=dev_args["l2_genesis_filepath"])
+        l2_el_genesis_artifact = plan.render_templates(
+            name="l2-genesis",
+            config={
+                "genesis.json": struct(template=l2_el_genesis_file_content, data={})
+            },
+        )
+
+    # Deploy network participants.
     plan.print(
         "Launching a Polygon PoS devnet with {} participants and the following network params: {}".format(
             len(participants), participants
         )
     )
-
-    validator_accounts = get_validator_accounts(participants)
-    plan.print("Number of validators: " + str(len(validator_accounts)))
-    plan.print(validator_accounts)
-
-    result = contract_deployer.deploy_contracts(
-        plan, l1_context, polygon_pos_args, validator_accounts
-    )
-    validator_config_artifact = result.files_artifacts[1]
-
-    result = el_genesis_generator.generate_el_genesis_data(
-        plan, polygon_pos_args, validator_config_artifact
-    )
-    l2_el_genesis_artifact = result.files_artifacts[0]
 
 
 def get_validator_accounts(participants):

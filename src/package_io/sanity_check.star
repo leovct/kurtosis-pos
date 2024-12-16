@@ -33,6 +33,8 @@ DEV_PARAMS = [
     "should_deploy_l1",  # boolean
     "l1_private_key",
     "l1_rpc_url",
+    "should_deploy_matic_contracts",  # boolean
+    "l2_genesis_filepath",
 ]
 
 
@@ -70,8 +72,8 @@ def sanity_check_dev_args(plan, input_args):
             )
 
     # Validate values.
-    deploy_l1 = input_args.get("should_deploy_l1", True)
-    if not deploy_l1:
+    should_deploy_l1 = input_args.get("should_deploy_l1", True)
+    if not should_deploy_l1:
         l1_private_key = input_args.get("l1_private_key", "")
         if l1_private_key == "":
             fail(
@@ -82,6 +84,16 @@ def sanity_check_dev_args(plan, input_args):
         if l1_rpc_url == "":
             fail(
                 "`dev.l1_rpc_url` must be specified when `dev.should_deploy_l1` is set to false!"
+            )
+
+    should_deploy_matic_contracts = input_args.get(
+        "should_deploy_matic_contracts", True
+    )
+    if not should_deploy_matic_contracts:
+        l2_genesis_filepath = input_args.get("l2_genesis_filepath", "")
+        if l2_genesis_filepath == "":
+            fail(
+                "`dev.l2_genesis_filepath` must be specified when `dev.should_deploy_matic_contracts` is set to false!"
             )
 
 

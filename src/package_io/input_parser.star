@@ -67,6 +67,7 @@ DEFAULT_POLYGON_POS_PACKAGE_ARGS = {
 
 DEFAULT_DEV_ARGS = {
     "should_deploy_l1": True,
+    "should_deploy_matic_contracts": True,
 }
 
 
@@ -135,6 +136,11 @@ def _parse_dev_args(plan, dev_input_args):
     # Set default params if not provided.
     if "should_deploy_l1" not in dev_input_args:
         dev_input_args["should_deploy_l1"] = DEFAULT_DEV_ARGS["should_deploy_l1"]
+
+    if "should_deploy_matic_contracts" not in dev_input_args:
+        dev_input_args["should_deploy_matic_contracts"] = DEFAULT_DEV_ARGS[
+            "should_deploy_matic_contracts"
+        ]
 
     # Sort the dict and return the result.
     return _sort_dict_by_values(dev_input_args)

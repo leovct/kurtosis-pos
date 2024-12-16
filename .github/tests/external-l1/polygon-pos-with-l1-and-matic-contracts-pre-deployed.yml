@@ -1,0 +1,7 @@
+dev:
+  should_deploy_l1: False
+  l1_private_key: eaba42282ad33c8ef2524f07277c03a776d98ae19f581990ce75becb7cfa1c23 # https://github.com/ethpandaops/ethereum-package/blob/main/src/prelaunch_data_generator/genesis_constants/genesis_constants.star#L70
+  l1_rpc_url: http://el-1-geth-lighthouse:8545
+
+  should_deploy_matic_contracts: False
+  l2_genesis_filepath: /tmp/l2-genesis.json
