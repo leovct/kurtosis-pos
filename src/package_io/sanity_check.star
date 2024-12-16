@@ -8,6 +8,7 @@ ALLOWED_PARAMS = {
         "cl_type",
         "cl_image",
         "cl_log_level",
+        "cl_db_image",
         "is_validator",
         "count",
     ],

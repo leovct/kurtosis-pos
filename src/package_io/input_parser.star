@@ -13,6 +13,8 @@ DEFAULT_CL_IMAGES = {
     constants.CL_TYPE.heimdall: "maticnetwork/heimdall:v1.0.3",
 }
 
+DEFAULT_CL_DB_IMAGE = "rabbitmq:4.0.4"
+
 DEFAULT_ETHEREUM_PACKAGE_ARGS = {
     "participants": [
         {
@@ -41,6 +43,7 @@ DEFAULT_POLYGON_POS_PACKAGE_ARGS = {
             "cl_type": constants.CL_TYPE.heimdall,
             "cl_image": DEFAULT_CL_IMAGES[constants.CL_TYPE.heimdall],
             "cl_log_level": "info",
+            "cl_db_image": DEFAULT_CL_DB_IMAGE,
             "is_validator": True,
             "count": 1,
         }
