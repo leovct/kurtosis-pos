@@ -113,7 +113,7 @@ def deploy_local_l1(plan, ethereum_args, preregistered_validator_keys_mnemonic):
     plan.print(l1)
 
     l1_config_env_vars = {
-        "CL_RPC_URL": str(all_l1_participants[0].cl_context.beacon_http_url),
+        "CL_RPC_URL": str(l1.all_l1_participants[0].cl_context.beacon_http_url),
     }
     l1_config_env_vars = get_l1_config(
         l1.all_participants, l1.network_params, l1.network_id
