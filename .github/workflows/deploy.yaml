@@ -199,7 +199,7 @@ jobs:
         run: kurtosis run --enclave=${{ env.ENCLAVE_NAME }} .
       
       - name: Save L2 genesis
-        run: kurtosis files inspect ${{ env.ENCLAVE_NAME }} l2-genesis genesis.json > /tmp/l2-genesis.json
+        run: kurtosis files inspect ${{ env.ENCLAVE_NAME }} l2-genesis genesis.json > l2-genesis.json
 
       - name: Run Starlark
         run: kurtosis run --enclave=${{ env.ENCLAVE_NAME }} --args-file=./.github/tests/external-l1/polygon-pos-with-l1-and-matic-contracts-pre-deployed.yml --show-enclave-inspect=false .
@@ -215,5 +215,5 @@ jobs:
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: dump_run_with_external_l1_${{ github.run_id }}
+          name: dump_run_with_external_l1_and_pre_deployed_matic_contracts_${{ github.run_id }}
           path: ./dump
