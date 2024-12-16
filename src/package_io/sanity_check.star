@@ -62,7 +62,7 @@ def sanity_check_polygon_args(plan, input_args):
 def sanity_check_dev_args(plan, input_args):
     # Validate top-level config.
     for param in input_args.keys():
-        if param not in DEV_PARAMS.keys():
+        if param not in DEV_PARAMS:
             fail(
                 'Invalid parameter: "{}". Allowed fields: {}.'.format(
                     param, DEV_PARAMS.keys()

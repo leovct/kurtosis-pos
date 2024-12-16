@@ -6,12 +6,7 @@ genesis_constants = import_module(
 CONTRACTS_CONFIG_FILE_PATH = "../../static_files/contracts"
 
 
-def deploy_contracts(plan, l1, polygon_pos_args, validator_accounts):
-    l1_private_key = l1.pre_funded_accounts[
-        12
-    ].private_key  # reserved for L2 contract deployers
-    l1_rpc_url = l1.all_participants[0].el_context.rpc_http_url
-
+def deploy_contracts(plan, l1_context, polygon_pos_args, validator_accounts):
     network_params = polygon_pos_args["network_params"]
     bor_id = network_params["bor_id"]
     heimdall_id = network_params["heimdall_id"]
@@ -33,8 +28,8 @@ def deploy_contracts(plan, l1, polygon_pos_args, validator_accounts):
         description="Deploying MATIC contracts to L1 and staking for each validator - it can take up to 5 minutes",
         image=contracts_deployer_image,
         env_vars={
-            "PRIVATE_KEY": l1_private_key,
-            "L1_RPC_URL": l1_rpc_url,
+            "PRIVATE_KEY": l1_context.private_key,
+            "L1_RPC_URL": l1_context.rpc_url,
             "BOR_ID": bor_id,
             "DEFAULT_BOR_ID": constants.DEFAULT_BOR_ID,
             "HEIMDALL_ID": heimdall_id,
