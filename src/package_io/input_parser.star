@@ -133,8 +133,8 @@ def _parse_dev_args(plan, dev_input_args):
     sanity_check.sanity_check_dev_args(plan, dev_input_args)
 
     # Set default params if not provided.
-    for k, v in DEFAULT_DEV_ARGS.items():
-        dev_input_args.setdefault(k, v)
+    if "should_deploy_l1" not in dev_input_args:
+        dev_input_args["should_deploy_l1"] = DEFAULT_DEV_ARGS["should_deploy_l1"]
 
     # Sort the dict and return the result.
     return _sort_dict_by_values(dev_input_args)
