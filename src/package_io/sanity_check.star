@@ -29,11 +29,11 @@ POLYGON_POS_PARAMS = {
     ],
 }
 
-DEV_PARAMS = {
+DEV_PARAMS = [
     "should_deploy_l1",  # boolean
     "l1_private_key",
     "l1_rpc_url",
-}
+]
 
 
 def sanity_check_polygon_args(plan, input_args):
@@ -86,7 +86,7 @@ def sanity_check_dev_args(plan, input_args):
 
 
 def _validate_list(input_args, category):
-    allowed_values = ALLOWED_PARAMS[category]
+    allowed_values = POLYGON_POS_PARAMS[category]
     if category in input_args:
         for item in input_args[category]:
             if item not in allowed_values:
@@ -100,7 +100,7 @@ def _validate_list(input_args, category):
 
 
 def _validate_dict(input_args, category):
-    allowed_params = ALLOWED_PARAMS[category]
+    allowed_params = POLYGON_POS_PARAMS[category]
     if category in input_args:
         for param in input_args[category].keys():
             if param not in allowed_params:
@@ -112,7 +112,7 @@ def _validate_dict(input_args, category):
 
 
 def _validate_list_of_dict(input_args, category):
-    allowed_keys = ALLOWED_PARAMS[category]
+    allowed_keys = POLYGON_POS_PARAMS[category]
     if category in input_args:
         for item in input_args[category]:
             for key in item.keys():

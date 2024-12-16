@@ -16,12 +16,12 @@ wait = import_module("./src/wait/wait.star")
 def run(plan, args):
     # Parse L1, L2 and dev input args.
     args = input_parser.input_parser(plan, args)
-    ethereum_args = args.get("ethereum_package")
-    polygon_pos_args = args.get("polygon_pos_package")
-    dev_args = args.get("dev")
+    ethereum_args = args.get("ethereum_package", {})
+    polygon_pos_args = args.get("polygon_pos_package", {})
+    dev_args = args.get("dev", {})
 
     # Deploy local L1 if needed.
-    if dev_args["deploy_l1"]:
+    if dev_args.get("deploy_l1", True):
         plan.print(
             "Deploying a local L1 with the following input args: {}".format(
                 ethereum_args
@@ -117,6 +117,7 @@ def deploy_local_l1(plan, ethereum_args, preregistered_validator_keys_mnemonic):
     plan.print(l1)
 
     l1_config_env_vars = {
-        "CL_RPC_URL": str(l1.all_l1_participants[0].cl_context.beacon_http_url),
+        "CL_RPC_URL": str(l1.all_participants[0].cl_context.beacon_http_url),
     }
     wait.wait_for_startup(plan, l1_config_env_vars)
+    return l1
