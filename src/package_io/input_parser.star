@@ -90,7 +90,7 @@ def input_parser(plan, input_args):
     return {
         "ethereum_package": ethereum_args,
         "polygon_pos_package": polygon_pos_args,
-        "dev_args": dev_args,
+        "dev": dev_args,
     }
 
 

@@ -19,7 +19,7 @@ def run(plan, args):
     ethereum_args = args.get("ethereum_package", {})
     polygon_pos_args = args.get("polygon_pos_package", {})
     participants = polygon_pos_args["participants"]
-    dev_args = args.get("dev_args", {})
+    dev_args = args.get("dev", {})
 
     # Deploy local L1 if needed.
     should_deploy_l1 = dev_args["should_deploy_l1"]
