@@ -3,6 +3,7 @@ ethereum_package = import_module(
 )
 
 contract_deployer = import_module("./src/contracts/contract_deployer.star")
+el_cl_launcher = import_module("./src/el_cl_launcher.star")
 el_genesis_generator = import_module(
     "./src/prelaunch_data_generator/el_genesis/el_genesis_generator.star"
 )
@@ -81,6 +82,7 @@ def run(plan, args):
             len(participants), participants
         )
     )
+    el_cl_launcher.launch(plan, participants)
 
 
 def get_validator_accounts(participants):
