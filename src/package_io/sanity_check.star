@@ -79,7 +79,7 @@ def sanity_check_dev_args(plan, input_args):
             )
 
         l1_rpc_url = input_args.get("l1_rpc_url", "")
-        if l1_rpc_url:
+        if l1_rpc_url == "":
             fail(
                 "`dev.l1_rpc_url` must be specified when `dev.should_deploy_l1` is set to false!"
             )
