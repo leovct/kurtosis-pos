@@ -1,6 +1,6 @@
 constants = import_module("./constants.star")
 
-ALLOWED_PARAMS = {
+POLYGON_POS_PARAMS = {
     "participants": [
         "el_type",
         "el_image",
@@ -29,14 +29,20 @@ ALLOWED_PARAMS = {
     ],
 }
 
+DEV_PARAMS = {
+    "should_deploy_l1",  # boolean
+    "l1_private_key",
+    "l1_rpc_url",
+}
 
-def sanity_check(plan, input_args):
+
+def sanity_check_polygon_args(plan, input_args):
     # Validate top-level config.
     for param in input_args.keys():
-        if param not in ALLOWED_PARAMS.keys():
+        if param not in POLYGON_POS_PARAMS.keys():
             fail(
                 'Invalid parameter: "{}". Allowed fields: {}.'.format(
-                    param, ALLOWED_PARAMS.keys()
+                    param, POLYGON_POS_PARAMS.keys()
                 )
             )
 
@@ -51,6 +57,32 @@ def sanity_check(plan, input_args):
         _validate_participant(p)
 
     plan.print("Sanity check passed")
+
+
+def sanity_check_dev_args(plan, input_args):
+    # Validate top-level config.
+    for param in input_args.keys():
+        if param not in DEV_PARAMS.keys():
+            fail(
+                'Invalid parameter: "{}". Allowed fields: {}.'.format(
+                    param, DEV_PARAMS.keys()
+                )
+            )
+
+    # Validate values.
+    deploy_l1 = input_args.get("should_deploy_l1", True)
+    if not deploy_l1:
+        l1_private_key = input_args.get("l1_private_key", "")
+        if l1_private_key == "":
+            fail(
+                "`dev.l1_private_key` must be specified when `dev.should_deploy_l1` is set to false!"
+            )
+
+        l1_rpc_url = input_args.get("l1_rpc_url", "")
+        if l1_rpc_url:
+            fail(
+                "`dev.l1_rpc_url` must be specified when `dev.should_deploy_l1` is set to false!"
+            )
 
 
 def _validate_list(input_args, category):

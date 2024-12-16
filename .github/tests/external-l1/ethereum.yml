@@ -1,0 +1,3 @@
+etwork_params:
+  preset: minimal
+  seconds_per_slot: 1

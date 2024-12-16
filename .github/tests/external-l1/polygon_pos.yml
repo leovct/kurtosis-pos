@@ -1,0 +1,4 @@
+dev:
+  should_deploy_l1: False
+  l1_private_key: "TODO"
+  l1_rpc_url: http://el-1-geth-lighthouse:8545

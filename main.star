@@ -14,17 +14,79 @@ wait = import_module("./src/wait/wait.star")
 
 
 def run(plan, args):
-    # Parse L1 and L2 input args.
+    # Parse L1, L2 and dev input args.
     args = input_parser.input_parser(plan, args)
     ethereum_args = args.get("ethereum_package")
     polygon_pos_args = args.get("polygon_pos_package")
+    dev_args = args.get("dev")
 
+    # Deploy local L1 if needed.
+    if dev_args["deploy_l1"]:
+        l2_network_params = polygon_pos_args["network_params"]
+        preregistered_validator_keys_mnemonic = l2_network_params[
+            "preregistered_validator_keys_mnemonic"
+        ]
+        l1 = deploy_local_l1(plan, ethereum_args, preregistered_validator_keys_mnemonic)
+        l1_context = struct(
+            private_key=l1.pre_funded_accounts[
+                12
+            ].private_key,  # reserved for L2 contract deployers
+            rpc_url=l1.all_participants[0].el_context.rpc_http_url,
+        )
+    else:
+        l1_context = struct(
+            private_key=dev_args["l1_private_key"],
+            rpc_url=dev_args["l1_rpc_url"],
+        )
+
+    participants = polygon_pos_args["participants"]
+    plan.print(
+        "Launching a Polygon PoS devnet with {} participants and the following network params: {}".format(
+            len(participants), participants
+        )
+    )
+
+    validator_accounts = get_validator_accounts(participants)
+    plan.print("Number of validators: " + str(len(validator_accounts)))
+    plan.print(validator_accounts)
+
+    result = contract_deployer.deploy_contracts(
+        plan, l1_context, polygon_pos_args, validator_accounts
+    )
+    validator_config_artifact = result.files_artifacts[1]
+
+    result = el_genesis_generator.generate_el_genesis_data(
+        plan, polygon_pos_args, validator_config_artifact
+    )
+    l2_el_genesis_artifact = result.files_artifacts[0]
+
+
+def get_validator_accounts(participants):
+    prefunded_accounts = genesis_constants.PRE_FUNDED_ACCOUNTS
+    max_number_validators = len(prefunded_accounts)
+
+    validator_accounts = []
+    index = 0
+    for participant in participants:
+        if participant["is_validator"]:
+            count = participant.get("count", 1)
+            for _ in range(count):
+                account = prefunded_accounts[index]
+                validator_accounts.append(account)
+                index += 1
+                if index >= max_number_validators:
+                    # TODO: Remove this limitation.
+                    fail(
+                        "Having more than {} validators is not supported for now.".format(
+                            max_number_validators
+                        )
+                    )
+    return validator_accounts
+
+
+def deploy_local_l1(plan, ethereum_args, preregistered_validator_keys_mnemonic):
     # Sanity check the mnemonic used.
     # TODO: Remove this limitation.
-    l2_network_params = polygon_pos_args["network_params"]
-    preregistered_validator_keys_mnemonic = l2_network_params[
-        "preregistered_validator_keys_mnemonic"
-    ]
     default_l2_mnemonic = input_parser.DEFAULT_POLYGON_POS_PACKAGE_ARGS[
         "network_params"
     ]["preregistered_validator_keys_mnemonic"]
@@ -49,58 +111,11 @@ def run(plan, args):
     )
     l1 = ethereum_package.run(plan, ethereum_args)
     plan.print(l1)
+
+    l1_config_env_vars = {
+        "CL_RPC_URL": str(all_l1_participants[0].cl_context.beacon_http_url),
+    }
     l1_config_env_vars = get_l1_config(
         l1.all_participants, l1.network_params, l1.network_id
     )
-
     wait.wait_for_startup(plan, l1_config_env_vars)
-
-    participants = polygon_pos_args["participants"]
-    plan.print(
-        "Launching a Polygon PoS devnet with {} participants and the following network params: {}".format(
-            len(participants), participants
-        )
-    )
-
-    validator_accounts = get_validator_accounts(participants)
-    plan.print("Number of validators: " + str(len(validator_accounts)))
-    plan.print(validator_accounts)
-
-    result = contract_deployer.deploy_contracts(
-        plan, l1, polygon_pos_args, validator_accounts
-    )
-    validator_config_artifact = result.files_artifacts[1]
-
-    result = el_genesis_generator.generate_el_genesis_data(
-        plan, polygon_pos_args, validator_config_artifact
-    )
-    l2_el_genesis_artifact = result.files_artifacts[0]
-
-
-def get_l1_config(all_l1_participants, l1_network_params, l1_network_id):
-    env_vars = {}
-    env_vars["CL_RPC_URL"] = str(all_l1_participants[0].cl_context.beacon_http_url)
-    return env_vars
-
-
-def get_validator_accounts(participants):
-    prefunded_accounts = genesis_constants.PRE_FUNDED_ACCOUNTS
-    max_number_validators = len(prefunded_accounts)
-
-    validator_accounts = []
-    index = 0
-    for participant in participants:
-        if participant["is_validator"]:
-            count = participant.get("count", 1)
-            for _ in range(count):
-                account = prefunded_accounts[index]
-                validator_accounts.append(account)
-                index += 1
-                if index >= max_number_validators:
-                    # TODO: Remove this limitation.
-                    fail(
-                        "Having more than {} validators is not supported for now.".format(
-                            max_number_validators
-                        )
-                    )
-    return validator_accounts
