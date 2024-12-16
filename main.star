@@ -22,6 +22,12 @@ def run(plan, args):
 
     # Deploy local L1 if needed.
     if dev_args["deploy_l1"]:
+        plan.print(
+            "Deploying a local L1 with the following input args: {}".format(
+                ethereum_args
+            )
+        )
+
         l2_network_params = polygon_pos_args["network_params"]
         preregistered_validator_keys_mnemonic = l2_network_params[
             "preregistered_validator_keys_mnemonic"
@@ -34,6 +40,7 @@ def run(plan, args):
             rpc_url=l1.all_participants[0].el_context.rpc_http_url,
         )
     else:
+        plan.print("Using an external l1")
         l1_context = struct(
             private_key=dev_args["l1_private_key"],
             rpc_url=dev_args["l1_rpc_url"],
@@ -106,16 +113,10 @@ def deploy_local_l1(plan, ethereum_args, preregistered_validator_keys_mnemonic):
         "prefunded_accounts": prefunded_accounts
     }
 
-    plan.print(
-        "Deploying a local L1 with the following input args: {}".format(ethereum_args)
-    )
     l1 = ethereum_package.run(plan, ethereum_args)
     plan.print(l1)
 
     l1_config_env_vars = {
         "CL_RPC_URL": str(l1.all_l1_participants[0].cl_context.beacon_http_url),
     }
-    l1_config_env_vars = get_l1_config(
-        l1.all_participants, l1.network_params, l1.network_id
-    )
     wait.wait_for_startup(plan, l1_config_env_vars)

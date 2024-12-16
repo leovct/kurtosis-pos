@@ -154,7 +154,7 @@ jobs:
         run: kurtosis run --enclave=${{ env.ENCLAVE_NAME }} --args-file ./.github/tests/external-l1/ethereum.yml github.com/ethpandaops/ethereum-package@4.4.0
 
       - name: Run Starlark
-        run: kurtosis run --enclave=${{ env.ENCLAVE_NAME }} --args-file=./.github/tests/external-l1/polygon-pos.yml --show-enclave-inspect=false .
+        run: kurtosis run --enclave=${{ env.ENCLAVE_NAME }} --args-file=./.github/tests/external-l1/polygon_pos.yml --show-enclave-inspect=false .
 
       - name: Inspect enclave
         run: kurtosis enclave inspect ${{ env.ENCLAVE_NAME }}
