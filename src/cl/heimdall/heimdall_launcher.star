@@ -46,7 +46,7 @@ def launch(plan, name, participant, private_key):
             files={},
             entrypoint=["sh", "-c"],
             cmd=[
-                "heimdalld start --amqp-url {} --all --rest-server --bridge".format(
+                "heimdalld start --amqp_url {} --all --rest-server --bridge".format(
                     rabbitmq_url
                 ),
             ],
