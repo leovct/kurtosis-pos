@@ -18,6 +18,7 @@ def run(plan, args):
     args = input_parser.input_parser(plan, args)
     ethereum_args = args.get("ethereum_package", {})
     polygon_pos_args = args.get("polygon_pos_package", {})
+    participants = polygon_pos_args["participants"]
     dev_args = args.get("dev_args", {})
 
     # Deploy local L1 if needed.
@@ -50,7 +51,6 @@ def run(plan, args):
     # Deploy MATIC contracts if needed.
     should_deploy_matic_contracts = dev_args["should_deploy_matic_contracts"]
     if should_deploy_matic_contracts == True:
-        participants = polygon_pos_args["participants"]
         validator_accounts = get_validator_accounts(participants)
         plan.print("Number of validators: " + str(len(validator_accounts)))
         plan.print(validator_accounts)
