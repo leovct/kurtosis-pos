@@ -18,10 +18,11 @@ def run(plan, args):
     args = input_parser.input_parser(plan, args)
     ethereum_args = args.get("ethereum_package", {})
     polygon_pos_args = args.get("polygon_pos_package", {})
-    dev_args = args.get("dev", {})
+    dev_args = args.get("dev_args", {})
 
     # Deploy local L1 if needed.
-    if dev_args.get("deploy_l1", True):
+    should_deploy_l1 = dev_args["should_deploy_l1"]
+    if should_deploy_l1 == True:
         plan.print(
             "Deploying a local L1 with the following input args: {}".format(
                 ethereum_args
