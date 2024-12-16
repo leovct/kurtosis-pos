@@ -114,13 +114,15 @@ def _validate_list(input_args, category):
 def _validate_dict(input_args, category):
     allowed_params = POLYGON_POS_PARAMS[category]
     if category in input_args:
-        for param in input_args[category].keys():
-            if param not in allowed_params:
-                fail(
-                    'Invalid key: "{}" in "{}" dict. Allowed keys: {}.'.format(
-                        param, category, allowed_params
+        item = input_args[category]
+        if item:
+            for param in item.keys():
+                if param not in allowed_params:
+                    fail(
+                        'Invalid key: "{}" in "{}" dict. Allowed keys: {}.'.format(
+                            param, category, allowed_params
+                        )
                     )
-                )
 
 
 def _validate_list_of_dict(input_args, category):
