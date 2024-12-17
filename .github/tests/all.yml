@@ -11,7 +11,7 @@ polygon_pos_package:
       cl_type: heimdall
       cl_image: maticnetwork/heimdall:v1.0.3
       cl_log_level: debug
-      cl_db_image: rabbimtq:4.0.4
+      cl_db_image: rabbitmq:4.0.4
       is_validator: true
       count: 2
     - el_type: erigon
