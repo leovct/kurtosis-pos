@@ -24,5 +24,5 @@ docker push leovct/matic-genesis-builder:node-16
 
 ```bash
 docker build --tag leovct/heimdall-genesis-builder:v1.0.3 --file heimdall-genesis-builder.Dockerfile .
-docker push leovct/heimdall-genesis-builder:node-16
+docker push leovct/heimdall-genesis-builder:v1.0.3
 ```
