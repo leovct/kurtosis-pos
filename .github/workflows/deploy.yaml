@@ -199,7 +199,7 @@ jobs:
         run: kurtosis run --enclave=${{ env.ENCLAVE_NAME }} .
       
       - name: Save L2 genesis
-        run: kurtosis files inspect ${{ env.ENCLAVE_NAME }} l2-genesis genesis.json > l2-genesis.json
+        run: kurtosis files inspect ${{ env.ENCLAVE_NAME }} l2-el-genesis genesis.json > l2-el-genesis.json
 
       - name: Run Starlark
         run: kurtosis run --enclave=${{ env.ENCLAVE_NAME }} --args-file=./.github/tests/external-l1/polygon-pos-with-l1-and-matic-contracts-pre-deployed.yml --show-enclave-inspect=false .

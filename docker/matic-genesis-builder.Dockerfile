@@ -19,7 +19,7 @@ LABEL author="devtools@polygon.technology"
 ENV DEFAULT_BOR_ID="137"
 ENV DEFAULT_HEIMDALL_ID="heimdall-P5rXwg"
 
-COPY --from=soldity-builder /opt/solidity/build/solc /usr/local/bin
+COPY --from=soldity-builder /opt/solidity/build/solc /usr/local/bin/
 
 # Prepare environment to build MATIC genesis file.
 WORKDIR /opt/genesis-contracts
@@ -32,8 +32,8 @@ RUN npm install --global truffle@5.11.5 \
   && cd matic-contracts \
   && git checkout mardizzone/node-16 \
   && npm install \
-  && npm run template:process -- --bor-chain-id $DEFAULT_BOR_ID \
+  && npm run template:process -- --bor-chain-id "${DEFAULT_BOR_ID}" \
   && truffle compile \
   && cd .. \
-  && node generate-borvalidatorset.js --bor-chain-id $DEFAULT_BOR_ID --heimdall-chain-id $DEFAULT_HEIMDALL_ID \
+  && node generate-borvalidatorset.js --bor-chain-id "${DEFAULT_BOR_ID}" --heimdall-chain-id "${DEFAULT_HEIMDALL_ID}" \
   && truffle compile

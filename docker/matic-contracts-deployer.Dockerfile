@@ -17,5 +17,5 @@ RUN apt-get update \
   && npm install --global truffle@5.11.5 \
   && git clone --branch mardizzone/node-16 https://github.com/maticnetwork/contracts.git . \
   && npm install \
-  && npm run template:process -- --bor-chain-id $DEFAULT_BOR_ID \
+  && npm run template:process -- --bor-chain-id "${DEFAULT_BOR_ID}" \
   && truffle compile

@@ -73,6 +73,8 @@ if [[ -z "${VALIDATOR_TOP_UP_FEE_AMOUNT}" ]]; then
   exit 1
 fi
 echo "VALIDATOR_ACCOUNTS: ${VALIDATOR_ACCOUNTS}"
+# Note: VALIDATOR_ACCOUNTS is expected to follow this exact pattern:
+# "<address1>,<full_public_key1>;<address2>,<full_public_key2>;..."
 echo "VALIDATOR_BALANCE: ${VALIDATOR_BALANCE}"
 echo "VALIDATOR_STAKE_AMOUNT: ${VALIDATOR_STAKE_AMOUNT}"
 echo "VALIDATOR_TOP_UP_FEE_AMOUNT: ${VALIDATOR_TOP_UP_FEE_AMOUNT}"
@@ -82,8 +84,6 @@ validator_config_file="validators.js"
 jq -n '[]' > "${validator_config_file}"
 
 echo "Staking for each validator node..."
-# Note: VALIDATOR_ACCOUNTS is expected to follow this exact pattern:
-# "<address1>,<full_public_key1>;<address2>,<full_public_key2>;..."
 IFS=';' read -ra validator_accounts <<< "$VALIDATOR_ACCOUNTS"
 for account in "${validator_accounts[@]}"; do
   IFS=',' read -r address full_public_key <<< "$account"
