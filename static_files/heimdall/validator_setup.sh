@@ -54,6 +54,9 @@ setup_validator() {
   else
     node_ids+=",${node_id}"
   fi
+
+  # Drop the unnecessary files.
+  rm -rf "${validator_config_path}"/config/{app.toml,config.toml,heimdall-config.toml,genesis.json}
 }
 
 # Loop through validators and set them up.

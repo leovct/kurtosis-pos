@@ -42,7 +42,6 @@ def launch(
     heimdall_config_generator_artifact = _generate_heimdall_config(
         plan, participants, prefunded_accounts, polygon_pos_args
     )
-    plan.print(heimdall_config_generator_artifact)
 
     for i, participant in enumerate(participants):
         plan.print(
@@ -92,20 +91,14 @@ def _generate_heimdall_config(plan, participants, prefunded_accounts, polygon_po
     for i, participant in enumerate(participants):
         if participant["cl_type"] == constants.CL_TYPE.heimdall:
             heimdall_validator_private_keys.append(prefunded_accounts[i].private_key)
+
+            validator_id = i + 1
             heimdall_validator_keys_store.append(
                 StoreSpec(
-                    src="{}/{}/config/node_key.json".format(
-                        constants.HEIMDALL_CONFIG_PATH, i
+                    src="{}/{}/config/".format(
+                        constants.HEIMDALL_CONFIG_PATH, validator_id
                     ),
-                    name="heimdall-validator-{}-node-key".format(i),
-                )
-            )
-            heimdall_validator_keys_store.append(
-                StoreSpec(
-                    src="{}/{}/config/priv_validator_key.json".format(
-                        constants.HEIMDALL_CONFIG_PATH, i
-                    ),
-                    name="heimdall-validator-{}-private-key".format(i),
+                    name="heimdall-validator-{}-config".format(validator_id),
                 )
             )
     heimdall_validator_private_keys = ";".join(heimdall_validator_private_keys)
@@ -130,11 +123,6 @@ def _generate_heimdall_config(plan, participants, prefunded_accounts, polygon_po
             name="heimdall-validators-node-ids",
         )
     ]
-    plan.print(
-        "DEBUG: heimdall_config_generator_store: {}".format(
-            heimdall_config_generator_store
-        )
-    )
     result = plan.run_sh(
         name="heimdall-validators-config-generator",
         image=heimdall_config_generator_image,
