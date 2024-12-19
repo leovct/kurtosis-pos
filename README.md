@@ -10,10 +10,15 @@ TODO
 
 TODO
 
+```bash
+# create params.yml file
+kurtosis run --enclave polygon-pos --args-file params.yml .
+```
+
 1. Get MATIC contract addresses.
 
 ```bash
-kurtosis files inspect test matic-contract-addresses contractAddresses.json | tail -n +2 | jq
+kurtosis files inspect polygon-pos matic-contract-addresses contractAddresses.json | tail -n +2 | jq
 ```
 
 <details>
@@ -58,7 +63,7 @@ kurtosis files inspect test matic-contract-addresses contractAddresses.json | ta
 2. Get the validators configuration.
 
 ```bash
-kurtosis files inspect test validators-config validators.js | tail -n +2
+kurtosis files inspect polygon-pos validators-config validators.js | tail -n +2
 ```
 
 <details>
@@ -86,6 +91,18 @@ exports = module.exports = [
 
 </details>
 <br/>
+
+3. Get the EL genesis.
+
+```bash
+kurtosis files inspect polygon-pos l2-el-genesis genesis.json | tail -n +2 | jq
+```
+
+4. Get the CL genesis.
+
+```bash
+kurtosis files inspect polygon-pos l2-cl-genesis genesis.json | tail -n +2 | jq
+```
 
 ## Configuration
 

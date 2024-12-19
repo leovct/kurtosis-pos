@@ -31,7 +31,7 @@ echo "DEFAULT_HEIMDALL_ID: ${DEFAULT_HEIMDALL_ID}"
 if [[ "${BOR_ID}" == "${DEFAULT_BOR_ID}" && "${HEIMDALL_ID}" == "${DEFAULT_HEIMDALL_ID}" ]]; then
   echo "There is no need to regenerate the validator set since BOR_ID and HEIMDALL_ID are already set to their default values."
 else
-  echo "Generating the validator set since BOR_ID and/or HEIMDALL_IR are different than the default values..."
+  echo "Generating the validator set since BOR_ID and/or HEIMDALL_ID are different than the default values..."
   node generate-borvalidatorset.js --bor-chain-id "${BOR_ID}" --heimdall-chain-id "${HEIMDALL_ID}"
 
   echo "Re-compiling the genesis contracts..."

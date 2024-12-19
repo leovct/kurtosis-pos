@@ -1,7 +1,7 @@
 constants = import_module("../../package_io/constants.star")
 
 
-GENESIS_CONFIG_FILE_PATH = "../../../static_files/genesis"
+EL_GENESIS_CONFIG_FOLDER_PATH = "../../../static_files/genesis"
 
 
 def generate_el_genesis_data(plan, polygon_pos_args, validator_config_artifact):
@@ -13,7 +13,7 @@ def generate_el_genesis_data(plan, polygon_pos_args, validator_config_artifact):
     heimdall_id = network_params["heimdall_id"]
 
     genesis_config_artifact = plan.upload_files(
-        src=GENESIS_CONFIG_FILE_PATH,
+        src=EL_GENESIS_CONFIG_FOLDER_PATH,
         name="matic-genesis-builder-config",
     )
 
@@ -36,7 +36,7 @@ def generate_el_genesis_data(plan, polygon_pos_args, validator_config_artifact):
         store=[
             StoreSpec(
                 src="/opt/genesis-contracts/genesis.json",
-                name="l2-genesis",
+                name="l2-el-genesis",
             ),
         ],
         run="bash /opt/data/genesis/genesis-builder.sh",

@@ -3,6 +3,8 @@ sanity_check = import_module("./sanity_check.star")
 
 DEFAULT_CONTRACTS_DEPLOYER = "leovct/matic-contracts-deployer:node-16"
 DEFAULT_GENESIS_BUILDER = "leovct/matic-genesis-builder:node-16"
+DEFAULT_HEIMDALL_CONFIG_GENERATOR = "leovct/heimdall-config-generator:v1.0.3"
+# DEFAULT_HEIMDALL_CONFIG_GENERATOR = "maticnetwork/heimdall:v1.0.3"
 
 DEFAULT_EL_IMAGES = {
     constants.EL_TYPE.bor: "maticnetwork/bor:v0.2.17",
@@ -51,6 +53,7 @@ DEFAULT_POLYGON_POS_PACKAGE_ARGS = {
     "matic_contracts_params": {
         "contracts_deployer_image": DEFAULT_CONTRACTS_DEPLOYER,
         "genesis_builder_image": DEFAULT_GENESIS_BUILDER,
+        "heimdall_config_generator_image": DEFAULT_HEIMDALL_CONFIG_GENERATOR,
     },
     "network_params": {
         # TODO: Find out if this `network` parameter is really needed.
@@ -61,6 +64,10 @@ DEFAULT_POLYGON_POS_PACKAGE_ARGS = {
         "preregistered_validator_keys_mnemonic": "sibling lend brave explain wait orbit mom alcohol disorder message grace sun",
         "validator_stake_amount": "10000",  # in ether
         "validator_top_up_fee_amount": "2000",  # in ether
+        "bor_sprint_duration": 16,
+        "bor_span_duration": 128,
+        "heimdall_span_poll_interval": "0m15s",
+        "heimdall_checkpoint_poll_interval": "1m0s",
     },
     "additional_services": [],
 }

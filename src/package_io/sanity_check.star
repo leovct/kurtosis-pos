@@ -15,6 +15,7 @@ POLYGON_POS_PARAMS = {
     "matic_contracts_params": [
         "contracts_deployer_image",
         "genesis_builder_image",
+        "heimdall_config_generator_image",
     ],
     "network_params": [
         "network",
@@ -23,6 +24,10 @@ POLYGON_POS_PARAMS = {
         "preregistered_validator_keys_mnemonic",
         "validator_stake_amount",
         "validator_top_up_fee_amount",
+        "bor_sprint_duration",
+        "bor_span_duration",
+        "heimdall_span_poll_interval",
+        "heimdall_checkpoint_poll_interval",
     ],
     "additional_services": [
         "tx_spammer",
@@ -34,7 +39,8 @@ DEV_PARAMS = [
     "l1_private_key",
     "l1_rpc_url",
     "should_deploy_matic_contracts",  # boolean
-    "l2_genesis_filepath",
+    "l2_el_genesis_filepath",
+    "l2_cl_genesis_filepath",
 ]
 
 
@@ -66,9 +72,7 @@ def sanity_check_dev_args(plan, input_args):
     for param in input_args.keys():
         if param not in DEV_PARAMS:
             fail(
-                'Invalid parameter: "{}". Allowed fields: {}.'.format(
-                    param, DEV_PARAMS.keys()
-                )
+                'Invalid parameter: "{}". Allowed fields: {}.'.format(param, DEV_PARAMS)
             )
 
     # Validate values.
@@ -90,10 +94,16 @@ def sanity_check_dev_args(plan, input_args):
         "should_deploy_matic_contracts", True
     )
     if not should_deploy_matic_contracts:
-        l2_genesis_filepath = input_args.get("l2_genesis_filepath", "")
-        if l2_genesis_filepath == "":
+        l2_el_genesis_filepath = input_args.get("l2_el_genesis_filepath", "")
+        if l2_el_genesis_filepath == "":
             fail(
-                "`dev.l2_genesis_filepath` must be specified when `dev.should_deploy_matic_contracts` is set to false!"
+                "`dev.l2_el_genesis_filepath` must be specified when `dev.should_deploy_matic_contracts` is set to false!"
+            )
+
+        l2_cl_genesis_filepath = input_args.get("l2_cl_genesis_filepath", "")
+        if l2_cl_genesis_filepath == "":
+            fail(
+                "`dev.l2_cl_genesis_filepath` must be specified when `dev.should_deploy_matic_contracts` is set to false!"
             )
 
 
